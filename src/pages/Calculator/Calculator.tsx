@@ -38,17 +38,21 @@ type Props = OwnProps;
 export const CalculatorPage: React.FC<Props> = (props: Props) => {
   const { classes } = props;
 
-  const [values, setValues] = useState<
-    { [k in string]: { value: number; kcal: number } }
-  >({});
+  const [values, setValues] = useState<{
+    [k in string]: { value: number; kcal: number };
+  }>({});
 
-  const handleChange = (itemName: string, itemKcal: number) => (
-    value: number
-  ) => {
-    setValues({
-      ...values,
-      [itemName]: { value, kcal: value * itemKcal },
-    });
+  const handleChange =
+    (itemName: string, itemKcal: number) => (value: number) => {
+      setValues({
+        ...values,
+        [itemName]: { value, kcal: value * itemKcal },
+      });
+    };
+
+  // Fonction pour tout réinitialiser
+  const handleReset = () => {
+    setValues({});
   };
 
   const result = Object.keys(values).reduce((acc: number, itemName: string) => {
@@ -78,6 +82,17 @@ export const CalculatorPage: React.FC<Props> = (props: Props) => {
             </div>
           </div>
           <div className={classes.buttonContainer}>
+            {/* Bouton Reset */}
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleReset}
+              style={{ marginRight: 16 }}
+            >
+              Reset
+            </Button>
+
+            {/* Bouton de calcul existant */}
             <Button variant="contained" onClick={sendData(result)}>
               {result} Kcal
             </Button>
@@ -180,6 +195,7 @@ const styles = (theme: CustomTheme): Record<ClassNames, CSSProperties> => ({
   buttonContainer: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center", // Ajouté pour aligner proprement les boutons verticalement
     minHeight: 36,
     flex: 1,
     marginBottom: theme.spacing(3),
